@@ -30,6 +30,16 @@ const analysisSchema = new mongoose.Schema(
         matchScore: {
             type: Number,
             required: true
+        },
+
+        requirements: {
+            type: [String],
+            default: []
+        },
+
+        responsibilities: {
+            type: [String],
+            default: []
         }
     },
     {

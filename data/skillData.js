@@ -22,7 +22,7 @@ export const skills = [
     {
         name: "JavaScript",
         required: false,
-        keywords: ["javascript", "js"]
+        keywords: ["javascript"]
     },
     {
         name: "Python",
