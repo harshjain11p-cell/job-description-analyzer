@@ -7,6 +7,11 @@ const analysisSchema = new mongoose.Schema(
             required: true
         },
 
+        candidateSkills: {
+            type: [String],
+            default: []
+        },
+
         role: {
             type: String,
             default: null
@@ -22,6 +27,11 @@ const analysisSchema = new mongoose.Schema(
             default: null
         },
 
+        matchedSkills: {
+            type: [String],
+            default: []
+        },
+
         missingSkills: {
             type: [String],
             default: []
@@ -29,7 +39,7 @@ const analysisSchema = new mongoose.Schema(
 
         matchScore: {
             type: Number,
-            required: true
+            default: null
         },
 
         requirements: {

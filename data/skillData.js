@@ -2,7 +2,7 @@ export const skills = [
     {
         name: "Node.js",
         required: true,
-        keywords: ["node.js", "nodejs", "node"]
+        keywords: ["node.js", "nodejs"]
     },
     {
         name: "Express.js",
@@ -11,17 +11,17 @@ export const skills = [
     },
     {
         name: "MongoDB",
-        required: true,
+        required: false,
         keywords: ["mongodb", "mongo db"]
     },
     {
         name: "PostgreSQL",
-        required: true,
+        required: false,
         keywords: ["postgresql", "postgres"]
     },
     {
         name: "JavaScript",
-        required: false,
+        required: true,
         keywords: ["javascript"]
     },
     {
@@ -32,7 +32,37 @@ export const skills = [
     {
         name: "C++",
         required: false,
-        keywords: ["c++"]
+        keywords: ["c++", "cpp"]
+    },
+    {
+        name: "REST APIs",
+        required: false,
+        keywords: ["rest api", "restful api", "rest apis"]
+    },
+    {
+        name: "Git",
+        required: false,
+        keywords: ["git", "version control"]
+    },
+    {
+        name: "Docker",
+        required: false,
+        keywords: ["docker", "containerization"]
+    },
+    {
+        name: "Redis",
+        required: false,
+        keywords: ["redis"]
+    },
+    {
+        name: "TypeScript",
+        required: false,
+        keywords: ["typescript"]
+    },
+    {
+        name: "React",
+        required: false,
+        keywords: ["react", "react.js"]
     }
 ];
 
@@ -57,17 +87,4 @@ export const roles = [
         name: "Data Analyst",
         keywords: ["data analyst", "data analytics"]
     }
-];
-
-export const experiencePatterns = [
-    "fresher",
-    "0-1 years",
-    "1-2 years",
-    "2-3 years",
-    "3+ years",
-    "1 year",
-    "2 years",
-    "3 years",
-    "4 years",
-    "5 years"
 ];

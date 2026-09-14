@@ -2,16 +2,18 @@
   "name": "project-1-job-description-analyzer",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "Backend API for analyzing job descriptions and comparing required skills with candidate skills.",
   "license": "ISC",
   "author": "Harsh Jain",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.10.0"
+    "mongoose": "^9.10.0",
+    "openai": "^7.15.0"
   }
 }
