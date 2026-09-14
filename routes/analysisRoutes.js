@@ -1,6 +1,7 @@
 import express from "express";
 import Analysis from "../models/analysis.js";
 import { analyzeJobDescription } from "../services/analysisService.js";
+import { analyzeWithAI } from "../services/aiAnalysisService.js";
 
 const router = express.Router();
 
@@ -45,19 +46,29 @@ router.post("/analyze", async (req, res) => {
             )
         ];
 
+        // Basic rule-based analysis
         const result = analyzeJobDescription(
-            jobDescription,
-            cleanedCandidateSkills
+        jobDescription,
+        cleanedCandidateSkills
         );
 
+        const aiResult = await analyzeWithAI(
+        jobDescription,
+        cleanedCandidateSkills,
+        result
+        );
+
+        // Save combined analysis to MongoDB
         const analysis = await Analysis.create({
             jobDescription: jobDescription.trim(),
             candidateSkills: cleanedCandidateSkills,
-            ...result
+            ...result,
+            aiAnalysis: aiResult
         });
 
         res.status(201).json({
             id: analysis._id,
+
             role: analysis.role,
             skills: analysis.skills,
             experience: analysis.experience,
@@ -72,7 +83,9 @@ router.post("/analyze", async (req, res) => {
             matchScore: analysis.matchScore,
 
             requirements: analysis.requirements,
-            responsibilities: analysis.responsibilities
+            responsibilities: analysis.responsibilities,
+
+            aiAnalysis: analysis.aiAnalysis
         });
 
     } catch (error) {
@@ -83,7 +96,6 @@ router.post("/analyze", async (req, res) => {
         });
     }
 });
-
 
 /*
  * GET /analyses

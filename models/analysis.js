@@ -65,6 +65,43 @@ const analysisSchema = new mongoose.Schema(
         responsibilities: {
             type: [String],
             default: []
+        },
+
+        aiAnalysis: {
+            summary: {
+                type: String,
+                default: null
+            },
+
+            seniority: {
+                type: String,
+                default: null
+            },
+
+            keySkills: {
+                type: [String],
+                default: []
+            },
+
+            skillGaps: {
+                type: [String],
+                default: []
+            },
+
+            candidateStrengths: {
+                type: [String],
+                default: []
+            },
+
+            recommendations: {
+                type: [String],
+                default: []
+            },
+
+            interviewTopics: {
+                type: [String],
+                default: []
+            }
         }
     },
     {

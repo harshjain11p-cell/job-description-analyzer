@@ -2,6 +2,8 @@ import "dotenv/config";
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
 
+console.log("MONGODB_URI loaded:", !!process.env.MONGODB_URI);
+
 const PORT = process.env.PORT || 3000;
 
 await connectDB();

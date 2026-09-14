@@ -1,19 +1,26 @@
 # Job Description Analyzer
 
-A backend API that analyzes job descriptions, extracts important information, identifies required skills, and compares those skills with a candidate's skill set.
+A backend API that analyzes job descriptions, extracts job requirements, identifies technical skills, and compares them with a candidate's skills.
+
+The project is built with Node.js, Express.js, MongoDB, and Mongoose.
+
+## Live API
+
+https://job-description-analyzer-39bp.onrender.com
 
 ## Features
 
 - Detects the job role from a job description
-- Extracts technical skills using keyword matching
+- Extracts known technical skills
 - Detects required experience
+- Classifies skills as required or preferred
 - Extracts requirements and responsibilities
 - Compares job requirements with candidate skills
-- Calculates a candidate-to-job skill match score
+- Calculates a skill match score
 - Stores analyses in MongoDB
-- Provides APIs to retrieve previous analyses
-- Validates incoming API requests
-- Includes automated unit tests
+- Retrieves previous analyses
+- Validates API input
+- Includes automated tests
 
 ## Tech Stack
 
@@ -25,26 +32,35 @@ A backend API that analyzes job descriptions, extracts important information, id
 - Git & GitHub
 - Node.js built-in test runner
 
-## Project Structure
+## Architecture
 
 ```text
-Project-1-Job-Description-Analyzer/
-├── app.js
-├── server.js
-├── config/
-│   └── db.js
-├── data/
-│   └── skillData.js
-├── models/
-│   └── analysis.js
-├── routes/
-│   └── analysisRoutes.js
-├── services/
-│   └── analysisService.js
-├── tests/
-│   └── analysis.test.js
-├── .env
-├── .env.example
-├── .gitignore
-├── package.json
-└── README.md
+Client
+  |
+  | HTTP Request
+  v
+Express API
+  |
+  v
+Input Validation
+  |
+  v
+Analysis Service
+  |
+  +---- Role Detection
+  |
+  +---- Skill Detection
+  |
+  +---- Experience Detection
+  |
+  +---- Requirement Extraction
+  |
+  +---- Candidate Skill Matching
+  |
+  +---- Match Score
+  |
+  v
+MongoDB
+  |
+  v
+JSON Response
