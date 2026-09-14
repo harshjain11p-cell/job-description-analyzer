@@ -88,8 +88,7 @@ Missing Skills: ${ruleBasedResult.missingSkills?.join(", ") || "None"}
 Match Score: ${ruleBasedResult.matchScore ?? "Unknown"}
 
 Rules:
-- Treat the deterministic backend analysis as the source of truth for skills, matches, missing skills, role, experience, and match score.
-- Do not contradict the deterministic analysis.
+- Treat the deterministic backend analysis as the source of truth for skills, matches, missing skills, role, experience, and match score. When referring to the role, use the deterministic role exactly as provided. Do not rename, expand, or modify it.- Do not contradict the deterministic analysis.
 - Do not mark a preferred skill as required.
 - Do not invent skills or requirements.
 - keySkills should focus on important skills already identified by the backend.
