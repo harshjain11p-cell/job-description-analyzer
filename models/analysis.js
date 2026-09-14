@@ -27,6 +27,21 @@ const analysisSchema = new mongoose.Schema(
             default: null
         },
 
+        requiredSkills: {
+            type: [String],
+            default: []
+        },
+
+        preferredSkills: {
+            type: [String],
+            default: []
+        },
+
+        unclassifiedSkills: {
+            type: [String],
+            default: []
+        },
+
         matchedSkills: {
             type: [String],
             default: []

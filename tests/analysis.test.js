@@ -192,3 +192,200 @@ test("does not calculate a false match score without job skills", () => {
     assert.equal(result.matchScore, 0);
     assert.deepEqual(result.matchedSkills, []);
 });
+
+test("normalizes candidate skill aliases", () => {
+    const result = analyzeJobDescription(
+        "Backend Developer required with Node.js, PostgreSQL and RESTful API experience.",
+        [
+            "NodeJS",
+            "Postgres",
+            "RESTful API"
+        ]
+    );
+
+    assert.deepEqual(
+        result.matchedSkills,
+        [
+            "Node.js",
+            "PostgreSQL",
+            "REST APIs"
+        ]
+    );
+
+    assert.equal(result.matchScore, 100);
+});
+
+
+test("normalizes candidate skill capitalization", () => {
+    const result = analyzeJobDescription(
+        "Backend Developer required with Node.js and MongoDB.",
+        [
+            "NODE.JS",
+            "mongodb"
+        ]
+    );
+
+    assert.deepEqual(
+        result.matchedSkills,
+        [
+            "Node.js",
+            "MongoDB"
+        ]
+    );
+
+    assert.equal(result.matchScore, 100);
+});
+
+
+test("ignores unknown candidate skills", () => {
+    const result = analyzeJobDescription(
+        "Backend Developer required with Node.js.",
+        [
+            "NodeJS",
+            "SomethingThatDoesNotExist"
+        ]
+    );
+
+    assert.deepEqual(
+        result.matchedSkills,
+        ["Node.js"]
+    );
+
+    assert.equal(result.matchScore, 100);
+});
+
+test("classifies required and preferred skills", () => {
+    const result = analyzeJobDescription(
+        `Backend Developer
+
+Requirements:
+Node.js
+JavaScript
+MongoDB
+
+Nice to have:
+Docker
+Redis
+`,
+        [
+            "Node.js",
+            "JavaScript",
+            "MongoDB"
+        ]
+    );
+
+    assert.deepEqual(
+        result.requiredSkills,
+        [
+            "Node.js",
+            "JavaScript",
+            "MongoDB"
+        ]
+    );
+
+    assert.deepEqual(
+        result.preferredSkills,
+        [
+            "Docker",
+            "Redis"
+        ]
+    );
+});
+
+
+test("weights required skills more than preferred skills", () => {
+    const result = analyzeJobDescription(
+        `Backend Developer
+
+Requirements:
+Node.js
+JavaScript
+
+Nice to have:
+Docker
+Redis
+`,
+        [
+            "Node.js",
+            "JavaScript"
+        ]
+    );
+
+    assert.equal(result.matchScore, 67);
+});
+
+
+test("preferred skill match improves weighted score", () => {
+    const result = analyzeJobDescription(
+        `Backend Developer
+
+Requirements:
+Node.js
+JavaScript
+
+Nice to have:
+Docker
+Redis
+`,
+        [
+            "Node.js",
+            "JavaScript",
+            "Docker"
+        ]
+    );
+
+    assert.equal(result.matchScore, 83);
+});
+
+test("classifies skills correctly in a realistic job description", () => {
+    const result = analyzeJobDescription(
+        `We are looking for a Backend Developer to build and maintain scalable backend services.
+
+The ideal candidate should have 1+ years of experience with Node.js, Express.js, JavaScript and MongoDB.
+
+Experience with RESTful APIs is required.
+
+Knowledge of PostgreSQL is preferred.
+
+Docker and Redis are nice to have.
+`,
+        [
+            "NodeJS",
+            "Express",
+            "JavaScript",
+            "MongoDB",
+            "REST APIs",
+            "Docker"
+        ]
+    );
+
+    assert.deepEqual(
+        result.requiredSkills,
+        [
+            "Node.js",
+            "Express.js",
+            "MongoDB",
+            "JavaScript",
+            "REST APIs"
+        ]
+    );
+
+    assert.deepEqual(
+        result.preferredSkills,
+        [
+            "PostgreSQL",
+            "Docker",
+            "Redis"
+        ]
+    );
+
+    assert.deepEqual(
+        result.unclassifiedSkills,
+        []
+    );
+
+    assert.equal(
+        result.matchScore,
+        85
+    );
+});

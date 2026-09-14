@@ -12,8 +12,6 @@ router.post("/analyze", async (req, res) => {
             candidateSkills = []
         } = req.body;
 
-
-        // Validate job description
         if (
             typeof jobDescription !== "string" ||
             jobDescription.trim() === ""
@@ -23,16 +21,12 @@ router.post("/analyze", async (req, res) => {
             });
         }
 
-
-        // Validate candidate skills
         if (!Array.isArray(candidateSkills)) {
             return res.status(400).json({
                 error: "candidateSkills must be an array"
             });
         }
 
-
-        // Every candidate skill must be a string
         if (
             candidateSkills.some(
                 skill => typeof skill !== "string"
@@ -43,8 +37,6 @@ router.post("/analyze", async (req, res) => {
             });
         }
 
-
-        // Clean and remove duplicate skills
         const cleanedCandidateSkills = [
             ...new Set(
                 candidateSkills
@@ -53,12 +45,10 @@ router.post("/analyze", async (req, res) => {
             )
         ];
 
-
         const result = analyzeJobDescription(
             jobDescription,
             cleanedCandidateSkills
         );
-
 
         const analysis = await Analysis.create({
             jobDescription: jobDescription.trim(),
@@ -66,22 +56,26 @@ router.post("/analyze", async (req, res) => {
             ...result
         });
 
-
         res.status(201).json({
             id: analysis._id,
             role: analysis.role,
             skills: analysis.skills,
             experience: analysis.experience,
+
+            requiredSkills: analysis.requiredSkills,
+            preferredSkills: analysis.preferredSkills,
+            unclassifiedSkills: analysis.unclassifiedSkills,
+
             candidateSkills: analysis.candidateSkills,
             matchedSkills: analysis.matchedSkills,
             missingSkills: analysis.missingSkills,
             matchScore: analysis.matchScore,
+
             requirements: analysis.requirements,
             responsibilities: analysis.responsibilities
         });
 
     } catch (error) {
-
         console.error("Analysis error:", error);
 
         res.status(500).json({
@@ -91,16 +85,59 @@ router.post("/analyze", async (req, res) => {
 });
 
 
+/*
+ * GET /analyses
+ *
+ * Optional query parameters:
+ *
+ * ?role=Backend Developer
+ * ?limit=5
+ *
+ * Examples:
+ *
+ * GET /analyses
+ * GET /analyses?role=Backend%20Developer
+ * GET /analyses?limit=5
+ * GET /analyses?role=Backend%20Developer&limit=5
+ */
 router.get("/analyses", async (req, res) => {
     try {
+        const {
+            role,
+            limit = 10
+        } = req.query;
 
-        const analyses = await Analysis.find()
-            .sort({ createdAt: -1 });
+        const parsedLimit = Number(limit);
 
-        res.json(analyses);
+        if (
+            !Number.isInteger(parsedLimit) ||
+            parsedLimit < 1 ||
+            parsedLimit > 50
+        ) {
+            return res.status(400).json({
+                error: "limit must be an integer between 1 and 50"
+            });
+        }
+
+        const filter = {};
+
+        if (role) {
+            filter.role = role;
+        }
+
+        const analyses = await Analysis.find(filter)
+            .sort({ createdAt: -1 })
+            .limit(parsedLimit)
+            .select(
+                "_id role experience skills requiredSkills preferredSkills candidateSkills matchedSkills missingSkills matchScore createdAt"
+            );
+
+        res.json({
+            count: analyses.length,
+            analyses
+        });
 
     } catch (error) {
-
         console.error("Fetch analyses error:", error);
 
         res.status(500).json({
@@ -112,7 +149,6 @@ router.get("/analyses", async (req, res) => {
 
 router.get("/analyses/:id", async (req, res) => {
     try {
-
         const analysis = await Analysis.findById(
             req.params.id
         );
@@ -126,7 +162,6 @@ router.get("/analyses/:id", async (req, res) => {
         res.json(analysis);
 
     } catch (error) {
-
         console.error("Fetch analysis error:", error);
 
         res.status(400).json({
